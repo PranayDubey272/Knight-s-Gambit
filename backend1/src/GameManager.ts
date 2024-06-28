@@ -29,15 +29,17 @@ export class GameManager{
 
             if(message.type === INIT_GAME){
                 if(this.pendingUser){
+                    console.log("user-2-joined");
                     const game = new Game(this.pendingUser, socket);
                     this.games.push(game);
                     this.pendingUser = null;
                 }
                 else{
+                    console.log("user-1-joined");
                     this.pendingUser = socket;
                 }
             }
-            if(message.type === MOVE){
+            if(message.type === MOVE){                
                 const game = this.games.find(game => game.player1 === socket || game.player2 === socket);
                 if(game){
                     game.makeMove(socket, message.move);
