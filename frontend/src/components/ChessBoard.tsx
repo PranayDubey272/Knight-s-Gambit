@@ -1,7 +1,10 @@
 import { Color, PieceSymbol, Square } from "chess.js";
 import { useState } from "react";
+import { MOVE } from "../screens/Game";
 
-export const ChessBoard = ({board ,socket}:{
+export const ChessBoard = ({ chess, board ,socket, setBoard }:{
+    chess:any
+    setBoard: any;
     board : ({
         square: Square;
         type: PieceSymbol;
@@ -16,20 +19,26 @@ export const ChessBoard = ({board ,socket}:{
             {board.map((row,i)=>{
                 return <div key={i} className="flex">
                     {row.map((square,j)=>{
-                    const squareRepresentation = String.fromCharCode(65 + (j%8)) +""+ (8-i) as Square;
+                    const squareRepresentation = String.fromCharCode(97 + (j%8)) +""+ (8-i) as Square;
                        return <div onClick={()=>{
                             if(!from){
                                 setFrom(squareRepresentation);
                             }else{
                                 socket.send(JSON.stringify({
-                                    type : "move",
+                                    type : MOVE,
                                     payload : {
-                                        from,
-                                        to : squareRepresentation
+                                        move:{
+                                            from,
+                                            to : squareRepresentation
+                                        }
                                     }
                                 }))
                                 setFrom(null);
-
+                                chess.move({
+                                    from,
+                                    to : squareRepresentation
+                                });
+                                setBoard(chess.board());
                             }
                         }} key={j} className={`w-16 h-16 ${(i+j)%2 === 0 ? 'bg-zinc-600' : 'bg-white'}`}>
                             <div className="w-full justify-center flex h-full">

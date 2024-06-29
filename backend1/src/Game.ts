@@ -6,14 +6,14 @@ export class Game{
     player1:WebSocket;
     player2:WebSocket;
     private board: Chess;
-    // private startTime: Date;
+    private startTime: Date;
     private moveCount = 0;
 
     constructor(player1: WebSocket, player2: WebSocket){
         this.player1 = player1;
         this.player2 = player2;
         this.board = new Chess();
-        // this.startTime = new Date();
+        this.startTime = new Date();
 
         this.player1.send(JSON.stringify({
             type : INIT_GAME,
@@ -32,6 +32,7 @@ export class Game{
         from:string,
         to:string
     }){
+        console.log("inside make move");
         if(this.moveCount %2  === 0 && socket !== this.player1){
             console.log("issue1");
             return;
@@ -49,7 +50,13 @@ export class Game{
         }
         if(this.board.isGameOver()){
             console.log("game over");
-            this.player1.send(JSON.stringify({
+            this.player1.emit(JSON.stringify({
+                type: GAME_OVER,
+                payload:{
+                    winner : this.board.turn() === "w" ? "black" : "white"
+                }
+            }));
+            this.player2.emit(JSON.stringify({
                 type: GAME_OVER,
                 payload:{
                     winner : this.board.turn() === "w" ? "black" : "white"
