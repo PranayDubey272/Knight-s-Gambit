@@ -42,6 +42,7 @@ export class Game{
             return;
         }
         try{
+            console.log("move made");
             this.board.move(move);
         }
         catch(e){

@@ -20,10 +20,11 @@ export const ChessBoard = ({ chess, board ,socket, setBoard }:{
                 return <div key={i} className="flex">
                     {row.map((square,j)=>{
                     const squareRepresentation = String.fromCharCode(97 + (j%8)) +""+ (8-i) as Square;
+                    
                        return <div onClick={()=>{
                             if(!from){
                                 setFrom(squareRepresentation);
-                            }else{
+                            } else {
                                 socket.send(JSON.stringify({
                                     type : MOVE,
                                     payload : {
@@ -40,12 +41,24 @@ export const ChessBoard = ({ chess, board ,socket, setBoard }:{
                                 });
                                 setBoard(chess.board());
                             }
-                        }} key={j} className={`w-16 h-16 ${(i+j)%2 === 0 ? 'bg-zinc-600' : 'bg-white'}`}>
+                        }} 
+                        key={j} className={`w-16 h-16 ${(i+j)%2 === 0 ? 'bg-zinc-600' : 'bg-white'}`}>
                             <div className="w-full justify-center flex h-full">
-                                <div className="h-full justify-center flex flex-col">
-                                    {square ? square.type : ""}
+                
+                                <div className="h-full justify-center flex flex-col">  
+                                    {square ? <img className="w-10" src={`/pieces/${square?.color === "b" ? 
+                                        square?.type + ".png" : `${square?.type?.toUpperCase()}.png`}`} /> 
+                                        : null
+                                    }
                                 </div>
+                                <div className="flex flex-col justify-end">
+                                    {
+                                        (squareRepresentation[1]=='1')?squareRepresentation[0]:""
+                                    }
+                                </div>
+                                
                             </div>
+                            
                         </div>
                     })}
                 </div>

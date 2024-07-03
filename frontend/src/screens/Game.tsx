@@ -15,14 +15,14 @@ export const Game = () =>{
     const [started,setStarted] = useState(false);
 
     useEffect(() =>{
-        if(!socket) return;
+        if(!socket){return;}
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             console.log(data);
 
             if(data.type === INIT_GAME){
                 setStarted(true);
-                setChess(new Chess());
+                // setChess(new Chess());
                 setBoard(chess.board());
             }
             else if(data.type === MOVE){
